@@ -125,7 +125,7 @@ app.get('/:nums', (req,res)=>{
     console.log(req.params.nums)
 
     solvegame24(req.params.nums).then(response => {
-        res.send("วิธีคำนวน : " + res+" Success")
+        res.send("วิธีคำนวน : " + response+" Success")
     }).catch((e)=>{
         console.log({e})
         return res.status(403).send("Fail")
