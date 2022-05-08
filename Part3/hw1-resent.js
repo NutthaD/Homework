@@ -5,11 +5,11 @@ app.use(express.json());
 
 let employee_data = []
 
-app.get('/get_data',(req,res) => {
+app.get('/employee/get_data',(req,res) => {
     res.send(employee_data)
 })
 
-app.post('/post_data',(req,res) => {
+app.post('/employee/create',(req,res) => {
     if(!req.body.Fname ||
         !req.body.Lname ||
         !req.body.ID ||
@@ -41,7 +41,7 @@ app.post('/post_data',(req,res) => {
     res.send("Add data success");
 })
 
-app.put('/update_data',(req,res) => {
+app.put('/employee/edit_data',(req,res) => {
     if(!req.body.ID ||
         !req.body.Position ||
         !req.body.Tel ||
@@ -52,7 +52,7 @@ app.put('/update_data',(req,res) => {
         for(let i = 0; i< employee_data.length; i++){
             if(employee_data[i].Employee_ID == req.body.ID){
                 employee_data[i].Position = req.body.Position
-                employee_data[i].Tel = req.body.Telephone
+                employee_data[i].Telephone = req.body.Tel
                 employee_data[i].Email = req.body.Email
                 return res.send("Update success")
             }
@@ -61,7 +61,7 @@ app.put('/update_data',(req,res) => {
         return res.status(400).send("Error : not found");
 })
 
-app.delete('/delete_data',(req,res) => {
+app.delete('/employee/delete',(req,res) => {
     if(!req.body.ID){
         return res.status(400).send("Error : blank data");
     }
