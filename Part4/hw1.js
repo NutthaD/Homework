@@ -55,7 +55,7 @@ app.post('/user/register', (req, res) => {
         /*for (let i = 0; i < users.length; i++) {
             let data_user = dictionary = Object.assign({}, ...users.map((x,i) => ({[x.username]: x.password})));
             console.log(data_user)
-        }*/
+        }*/ 
         res.sendFile(__dirname + '/login.html')
     } catch (error) {
         res.status(500).send("Not Success " + error)

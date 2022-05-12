@@ -35,7 +35,7 @@ app.post('/employee/create', (req, res) => {
 
     console.log(hashpassword)
     let sql = 'INSERT INTO login VALUE (:id,:username,:password)'
-    let query = db.query(sql, {
+    let query = db.query(sql, { 
         username: req.body.username,
         password: hashpassword
     }, (err, results) => {
