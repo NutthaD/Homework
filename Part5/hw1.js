@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken');
 const app = express();
 app.use(express.json());
 
+let data = []
+
 const db = mysql.createConnection({
     namedPlaceholders: true,
     host: "localhost",
@@ -31,8 +33,8 @@ app.post('/employee/create', (req, res) => {
     }
     const hashpassword = SHA256(req.body.password).toString()
 
-
-    let sql = 'INSERT INTO login VALUE (:username,:password)'
+    console.log(hashpassword)
+    let sql = 'INSERT INTO login VALUE (:id,:username,:password)'
     let query = db.query(sql, {
         username: req.body.username,
         password: hashpassword
@@ -161,7 +163,7 @@ app.put('/employee/edit_data', authToken, (req, response) => {
 
 })
 
-app.delete('/employee/delete_data', authToken, (req, response) => {
+app.delete('/employee/delete_data', authToken, (req, res) => {
     if(!req.body.ID){
         return res.status(400).send("Error : invalid data");
     }
@@ -169,7 +171,7 @@ app.delete('/employee/delete_data', authToken, (req, response) => {
     for (let i = 0; i < data.length; i++) {
         if (data[i].Employee_ID == req.body.ID) {
             data.splice(i, 1);
-            return response.send("Submit");
+            return res.send("Submit");
         }
     }
 
@@ -181,7 +183,7 @@ app.delete('/employee/delete_data', authToken, (req, response) => {
     }, (err, results) => {
         if (err) {
 
-            return response.send('something wrong' + err);
+            return res.send('something wrong' + err);
         }
 
         return res.send("Delete success")

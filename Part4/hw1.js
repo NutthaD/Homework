@@ -16,17 +16,20 @@ app.get('/', (req, res) => {
 
 app.post('/login', (req, res) => {
     console.log(req.body)
-    console.log(users)
+    console.log("1"+users.username)
+    console.log("2"+users.password)
     if (!req.body.username || !req.body.password) {
         return res.status(401).send("Error : invalid data")
     }
-    if (req.body.username == users.username && req.body.password == users.password) {
-        const token = jwt.sign({ username: req.body.username }, process.env.ACCESS_TOKEN_SECRET)
-        res.cookie('token', token)
-        res.redirect('/home')
-    } else {
-        res.cookie('token', "")
-        res.redirect('/')
+    for (let i = 0; i < users.length; i++) {
+        if (req.body.username == users[i].username && req.body.password == users[i].password) {
+            const token = jwt.sign({ username: req.body.username }, process.env.ACCESS_TOKEN_SECRET)
+            res.cookie('token', token)
+            res.redirect('/home')
+        } else {
+            res.cookie('token', "")
+            res.redirect('/')
+        }
     }
 })
 
@@ -46,9 +49,13 @@ app.post('/user/register', (req, res) => {
 
         const hashpassword = SHA256(req.body.password).toString()
         const user = { username: req.body.username, password: hashpassword }
-        users.push(req.body.username)
+        users.push(user)
         console.log("user registered")
         console.log(users)
+        /*for (let i = 0; i < users.length; i++) {
+            let data_user = dictionary = Object.assign({}, ...users.map((x,i) => ({[x.username]: x.password})));
+            console.log(data_user)
+        }*/
         res.sendFile(__dirname + '/login.html')
     } catch (error) {
         res.status(500).send("Not Success " + error)
