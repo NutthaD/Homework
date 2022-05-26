@@ -20,9 +20,9 @@ app.post('/employee/create',(req,res) => {
         }
 
     for (let i = 0; i<employee_data.length; i++){
-        if(employee_data[i].Employee_ID === req.body.ID ||
-            employee_data[i].Telephone === req.body.Tel ||
-            employee_data[i].Email === req.body.Email){
+        if(employee_data[i].Employee_ID == req.body.ID ||
+            employee_data[i].Telephone == req.body.Tel ||
+            employee_data[i].Email == req.body.Email){
                 return res.status(400).send("Error : already have data")
         }
     }
@@ -50,7 +50,7 @@ app.put('/employee/edit_data',(req,res) => {
         }
     
         for(let i = 0; i< employee_data.length; i++){
-            if(employee_data[i].Employee_ID === req.body.ID){
+            if(employee_data[i].Employee_ID == req.body.ID){
                 employee_data[i].Position = req.body.Position
                 employee_data[i].Telephone = req.body.Tel
                 employee_data[i].Email = req.body.Email
@@ -67,7 +67,7 @@ app.delete('/employee/delete',(req,res) => {
     }
 
     for(let i = 0; i< employee_data.length; i++){
-        if(employee_data[i].Employee_ID === req.body.ID){
+        if(employee_data[i].Employee_ID == req.body.ID){
             //remove data from array ลบที่ index i ไป 1 ตัว ,หลังจากนี้คือ item ข้างใน
             employee_data.slice(i, 1)
             return res.send("Delete success")
