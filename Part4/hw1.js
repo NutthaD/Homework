@@ -22,13 +22,13 @@ app.post('/login', (req, res) => {
         return res.status(401).send("Error : invalid data")
     }
     for (let i = 0; i < users.length; i++) {
-        if (req.body.username === users[i]["username"] || req.body.password === users[i]["password"]) {
+        if (req.body.username == users[i]["username"] || req.body.password == users[i]["password"]) {
             const token = jwt.sign({ username: req.body.username }, process.env.ACCESS_TOKEN_SECRET)
             res.cookie('token', token)
             check ++;
         }
     }
-    if(check===1){
+    if(check==1){
         console.log("login success")
         res.redirect('/home')
     }
@@ -51,8 +51,8 @@ app.post('/user/register', (req, res) => {
     }
     try {
 
-        const hashedPassword = SHA256(req.body.password).toString()
-        const user = { username: req.body.username, password: hashedPassword }
+        const hashpassword = SHA256(req.body.password).toString()
+        const user = { username: req.body.username, password: hashpassword }
         users.push(user)
         console.log("user registered")
         res.sendFile(__dirname + '/login.html')
