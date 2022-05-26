@@ -31,20 +31,19 @@ app.post('/employee/create', (req, res) => {
         !req.body.password) {
         return res.status(400).send("Error : invalid data");
     }
-    const hashpassword = SHA256(req.body.password).toString()
+    const hashedPassword = SHA256(req.body.password).toString()
 
-    console.log(hashpassword)
+    console.log(hashedPassword)
     let sql = 'INSERT INTO login VALUE (:id,:username,:password)'
-    let query = db.query(sql, { 
+    db.query(sql, {
         username: req.body.username,
-        password: hashpassword
+        password: hashedPassword
     }, (err, results) => {
         if (err) {
             return res.send('Error : something wrong' + err);
         }
         res.send("Data inserted")
-    })
-
+    });
 })
 
 
@@ -53,11 +52,11 @@ app.post('/employee/login', (req, res) => {
         return res.status(400).send('User can not be found.')
     }
     try {
-        const hashpassword = SHA256(req.body.password).toString()
-        console.log(hashpassword)
+        const hashedPassword = SHA256(req.body.password).toString()
+        console.log(hashedPassword)
         let sql = 'SELECT password FROM login WHERE password=:password AND username =:username'
-        let query = db.query(sql, {
-            password: hashpassword,
+        db.query(sql, {
+            password: hashedPassword,
             username: req.body.username
         }, (err, results) => {
             if (err) {
@@ -65,16 +64,14 @@ app.post('/employee/login', (req, res) => {
             }
             if (results.length > 0) {
                 const username = req.body.username
-                const userath = { username: username }
-                const accesstoken = jwt.sign(userath, process.env.ACCESS_TOKEN_SECRET)
-                res.json({ accesstoken: accesstoken })
+                const accessToken = jwt.sign({ username: username }, process.env.ACCESS_TOKEN_SECRET)
+                res.json({ accesstoken: accessToken })
             }
             else {
                 console.log(results)
-                res.status(400).send('Password worng or Empty')
+                res.status(400).send('Password wrong or Empty')
             }
-        })
-
+        });
     } catch (error) {
         res.status(500).send('NOT OK' + error)
     }
@@ -82,10 +79,10 @@ app.post('/employee/login', (req, res) => {
 
 app.get('/employee/get_data', authToken, (req, response) => {
     let sql = 'SELECT * FROM employee_data'
-    let query = db.query(sql, (err, res) => {
+    db.query(sql, (err, res) => {
         if (err) throw err
         response.send(res)
-    })
+    });
 })
 
 app.post('/employee/createData', authToken, (req, response) => {
@@ -100,9 +97,9 @@ app.post('/employee/createData', authToken, (req, response) => {
         }
 
     for (let i = 0; i < data.length; i++) {
-        if (data[i].Employee_ID == req.body.ID ||
-            data[i].Telephone == req.body.Tel ||
-            data[i].Email == req.body.Email)
+        if (data[i].Employee_ID === req.body.ID ||
+            data[i].Telephone === req.body.Tel ||
+            data[i].Email === req.body.Email)
             return response.status(400).send("Error : already have data");
     }
 
@@ -135,17 +132,8 @@ app.put('/employee/edit_data', authToken, (req, response) => {
             return res.status(400).send("Error : invalid data");
         }
 
-    for (let i = 0; i < data.length; i++) {
-        if (data[i].Employee_ID == req.body.ID) {
-            data[i].Position = req.body.Position
-            data[i].Telephone = req.body.Tel
-            data[i].Email = req.body.Email
-            return res.send("Submit")
-        }
-    }
-
     let sql = 'UPDATE employee_data SET Position =:pos ,Tel =:tel ,Email =:email WHERE ID =:id'
-    let query = db.query(sql, {
+    db.query(sql, {
         id: req.body.ID,
         pos: req.body.Position,
         tel: req.body.Tel,
@@ -159,8 +147,7 @@ app.put('/employee/edit_data', authToken, (req, response) => {
 
         response.send("Update success")
 
-    })
-
+    });
 })
 
 app.delete('/employee/delete_data', authToken, (req, res) => {
@@ -168,15 +155,8 @@ app.delete('/employee/delete_data', authToken, (req, res) => {
         return res.status(400).send("Error : invalid data");
     }
 
-    for (let i = 0; i < data.length; i++) {
-        if (data[i].Employee_ID == req.body.ID) {
-            data.splice(i, 1);
-            return res.send("Submit");
-        }
-    }
-
     let sql = 'DELETE FROM employee_data WHERE ID =:id'
-    let query = db.query(sql, {
+    db.query(sql, {
         id: req.body.ID,
 
 
